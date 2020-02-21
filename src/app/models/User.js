@@ -16,6 +16,7 @@ class User extends Model {
             }
         );
 
+        // Criptografar a senha inserida antes de salvar
         this.addHook('beforeSave', async user => {
             if (user.password) {
                 user.password_hash = await bcrypt.hash(user.password, 8);
@@ -23,6 +24,11 @@ class User extends Model {
         });
 
         return this;
+    }
+
+    // Método para comparar senha armanzenada com senha inserida
+    checkPassword(password) {
+        return bcrypt.compare(password, this.password_hash);
     }
 }
 
